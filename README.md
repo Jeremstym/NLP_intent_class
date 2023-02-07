@@ -1,4 +1,4 @@
-# NLP_intent_class
+# NLP intent classifier
 
 This repository is for the NLP project at ENSAE. It is based on the subject of "Intents Classification for Neural Text Generation". 
 
