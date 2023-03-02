@@ -10,11 +10,10 @@ from transformers import BertTokenizer, BertModel, BertConfig
 # Sections of config
 
 # Defining some key variables that will be used later on in the training
-MAX_LEN = 200
-TRAIN_BATCH_SIZE = 8
-VALID_BATCH_SIZE = 4
-EPOCHS = 1
-LEARNING_RATE = 1e-05
+MAX_LEN = 512
+TRAIN_BATCH_SIZE = 64
+VALID_BATCH_SIZE = 32
+
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 
@@ -39,7 +38,7 @@ class CustomDataset(Dataset):
             None,
             add_special_tokens=True,
             max_length=self.max_len,
-            pad_to_max_length=True,
+            padding='max_length',
             return_token_type_ids=True
         )
         ids = inputs['input_ids']
@@ -51,7 +50,7 @@ class CustomDataset(Dataset):
             'ids': torch.tensor(ids, dtype=torch.long),
             'mask': torch.tensor(mask, dtype=torch.long),
             'token_type_ids': torch.tensor(token_type_ids, dtype=torch.long),
-            'targets': torch.tensor(self.targets[index], dtype=torch.float)
+            'targets': torch.tensor(self.targets[index], dtype=torch.long)
         }
     
 
