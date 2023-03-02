@@ -23,8 +23,8 @@ class CustomDataset(Dataset):
     def __init__(self, dataframe, tokenizer, max_len):
         self.tokenizer = tokenizer
         self.data = dataframe
-        self.comment_text = dataframe.comment_text
-        self.targets = self.data.list
+        self.comment_text = dataframe.Utterance
+        self.targets = self.data.Label
         self.max_len = max_len
 
     def __len__(self):
@@ -53,3 +53,23 @@ class CustomDataset(Dataset):
             'token_type_ids': torch.tensor(token_type_ids, dtype=torch.long),
             'targets': torch.tensor(self.targets[index], dtype=torch.float)
         }
+    
+
+def get_datafrom_tokenizer(train_df, test_df):
+    training_set = CustomDataset(train_df, tokenizer, MAX_LEN)
+    testing_set = CustomDataset(test_df, tokenizer, MAX_LEN)
+
+    train_params = {'batch_size': TRAIN_BATCH_SIZE,
+                'shuffle': True,
+                'num_workers': 0
+                }
+
+    test_params = {'batch_size': VALID_BATCH_SIZE,
+                    'shuffle': True,
+                    'num_workers': 0
+                    }
+
+    training_loader = DataLoader(training_set, **train_params)
+    testing_loader = DataLoader(testing_set, **test_params)
+
+    return training_loader, testing_loader
